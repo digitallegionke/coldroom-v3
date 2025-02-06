@@ -1,12 +1,16 @@
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Barlow } from "next/font/google"
 import "./globals.css"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BarChart3, Home, Settings, Thermometer } from "lucide-react"
 
-const inter = Inter({ subsets: ["latin"] })
+const barlow = Barlow({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-barlow",
+})
 
 export const metadata: Metadata = {
   title: "Cold Room Tracker",
@@ -20,7 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, "bg-background")}>
+      <body className={cn(barlow.className, "bg-background")}>
         <div className="flex min-h-screen flex-col md:flex-row">
           {/* Sidebar - Hidden on mobile */}
           <aside className="hidden md:flex w-64 border-r bg-muted/40 p-4 flex-col">
