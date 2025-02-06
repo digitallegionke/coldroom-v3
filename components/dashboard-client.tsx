@@ -6,15 +6,21 @@ import { ColdRoomCard } from "@/components/ui/cold-room-card"
 import { AlertCircle, RefreshCw } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
+import { ColdRoomModal } from "@/components/ui/cold-room-modal"
 
 export function DashboardClient() {
   const [coldRooms, setColdRooms] = useState<ColdRoom[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [updating, setUpdating] = useState<string | null>(null)
+  const [updatingRooms, setUpdatingRooms] = useState<Set<string>>(new Set())
+  const [selectedRoom, setSelectedRoom] = useState<ColdRoom | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
 
   useEffect(() => {
     fetchColdRooms()
+    // Set up periodic refresh every 30 seconds
+    const interval = setInterval(fetchColdRooms, 30000)
+    return () => clearInterval(interval)
   }, [])
 
   async function fetchColdRooms() {
@@ -33,9 +39,9 @@ export function DashboardClient() {
     }
   }
 
-  async function handleColdRoomClick(coldRoom: ColdRoom) {
+  async function handleUpdateRoom(coldRoom: ColdRoom) {
     try {
-      setUpdating(coldRoom.id)
+      setUpdatingRooms(prev => new Set(prev).add(coldRoom.id))
       const response = await fetch(`/api/cold-rooms`, {
         method: 'PUT',
         headers: {
@@ -55,11 +61,26 @@ export function DashboardClient() {
           room.id === updatedRoom.id ? updatedRoom : room
         )
       )
+
+      // Update selected room if it's currently displayed in modal
+      if (selectedRoom?.id === updatedRoom.id) {
+        setSelectedRoom(updatedRoom)
+      }
     } catch (err) {
       console.error('Error updating cold room:', err)
+      setError('Failed to update cold room. Please try again.')
     } finally {
-      setUpdating(null)
+      setUpdatingRooms(prev => {
+        const next = new Set(prev)
+        next.delete(coldRoom.id)
+        return next
+      })
     }
+  }
+
+  function handleCardClick(coldRoom: ColdRoom) {
+    setSelectedRoom(coldRoom)
+    setModalOpen(true)
   }
 
   if (loading) {
@@ -92,21 +113,34 @@ export function DashboardClient() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Active Cold Rooms</h2>
         <Button onClick={fetchColdRooms} variant="outline" size="sm" className="gap-2">
           <RefreshCw className="h-4 w-4" />
-          Refresh Data
+          Refresh All
         </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {coldRooms.map((coldRoom) => (
-          <ColdRoomCard
+          <div 
             key={coldRoom.id}
-            data={coldRoom}
-            onClick={() => !updating && handleColdRoomClick(coldRoom)}
-          />
+            onClick={() => handleCardClick(coldRoom)}
+            className="cursor-pointer"
+          >
+            <ColdRoomCard
+              data={coldRoom}
+              onUpdate={() => handleUpdateRoom(coldRoom)}
+              isUpdating={updatingRooms.has(coldRoom.id)}
+            />
+          </div>
         ))}
       </div>
+
+      <ColdRoomModal 
+        coldRoom={selectedRoom}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
     </div>
   )
 } 
