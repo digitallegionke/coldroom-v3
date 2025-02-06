@@ -22,7 +22,7 @@ A modern dashboard for monitoring and managing cold storage facilities. Built wi
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/coldroom-tracker.git
+git clone https://github.com/digitallegionke/coldroom-v3.git
 ```
 
 2. Install dependencies:
@@ -60,4 +60,4 @@ npm run dev
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
