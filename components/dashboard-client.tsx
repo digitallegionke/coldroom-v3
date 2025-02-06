@@ -7,6 +7,7 @@ import { AlertCircle, RefreshCw } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { ColdRoomModal } from "@/components/ui/cold-room-modal"
+import { OnboardingModal } from "@/components/ui/onboarding-modal"
 
 export function DashboardClient() {
   const [coldRooms, setColdRooms] = useState<ColdRoom[]>([])
@@ -17,15 +18,21 @@ export function DashboardClient() {
   const [modalOpen, setModalOpen] = useState(false)
 
   useEffect(() => {
-    fetchColdRooms()
+    fetchColdRooms(true) // Initial load
     // Set up periodic refresh every 30 seconds
-    const interval = setInterval(fetchColdRooms, 30000)
+    const interval = setInterval(() => fetchColdRooms(false), 30000)
     return () => clearInterval(interval)
   }, [])
 
-  async function fetchColdRooms() {
+  const handleRefresh = () => {
+    fetchColdRooms(false)
+  }
+
+  async function fetchColdRooms(isInitialLoad = false) {
     try {
-      setLoading(true)
+      if (isInitialLoad) {
+        setLoading(true)
+      }
       const response = await fetch('/api/cold-rooms')
       if (!response.ok) throw new Error('Failed to fetch cold rooms')
       const data = await response.json()
@@ -103,7 +110,7 @@ export function DashboardClient() {
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
-        <Button onClick={fetchColdRooms} variant="outline" className="gap-2">
+        <Button onClick={handleRefresh} variant="outline" className="gap-2">
           <RefreshCw className="h-4 w-4" />
           Try Again
         </Button>
@@ -115,7 +122,7 @@ export function DashboardClient() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Active Cold Rooms</h2>
-        <Button onClick={fetchColdRooms} variant="outline" size="sm" className="gap-2">
+        <Button onClick={handleRefresh} variant="outline" size="sm" className="gap-2">
           <RefreshCw className="h-4 w-4" />
           Refresh All
         </Button>
@@ -135,12 +142,12 @@ export function DashboardClient() {
           </div>
         ))}
       </div>
-
-      <ColdRoomModal 
+      <ColdRoomModal
         coldRoom={selectedRoom}
         open={modalOpen}
         onOpenChange={setModalOpen}
       />
+      <OnboardingModal />
     </div>
   )
 } 
