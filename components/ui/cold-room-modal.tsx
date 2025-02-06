@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog"
 import { ColdRoom, formatTemperature } from "@/lib/data"
@@ -26,7 +27,10 @@ export function ColdRoomModal({ coldRoom, open, onOpenChange }: ColdRoomModalPro
       <DialogContent className="max-w-4xl">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-2xl font-bold">{coldRoom.name} Coldroom Details</DialogTitle>
+            <div>
+              <DialogTitle className="text-2xl font-bold">{coldRoom.name} Coldroom Details</DialogTitle>
+              <DialogDescription>View and manage cold room information</DialogDescription>
+            </div>
             <DialogClose asChild>
               <Button variant="ghost" size="icon">
                 <X className="h-4 w-4" />
@@ -97,7 +101,7 @@ export function ColdRoomModal({ coldRoom, open, onOpenChange }: ColdRoomModalPro
                 <div key={index} className="p-4 bg-gray-50 rounded-lg">
                   <h4 className="font-medium">{item.item}</h4>
                   <p className="text-sm text-muted-foreground">Quantity: {item.quantity}</p>
-                  <p className="text-sm text-muted-foreground">Client: {item.source}</p>
+                  <p className="text-sm text-muted-foreground">Client: {item.client}</p>
                 </div>
               ))}
             </div>

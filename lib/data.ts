@@ -4,10 +4,16 @@ export type CriticalItem = {
   expiresIn: number
 }
 
-export type InventoryMovement = {
+export type IncomingItem = {
   item: string
   quantity: string
-  source: string // farmer or client name
+  source: string // farmer name
+}
+
+export type OutgoingItem = {
+  item: string
+  quantity: string
+  client: string // client name
 }
 
 export type PickupSchedule = {
@@ -29,8 +35,8 @@ export type ColdRoom = {
   lastUpdated: string
   lastChecked: string
   criticalItems: CriticalItem[]
-  incomingItems: InventoryMovement[]
-  outgoingItems: InventoryMovement[]
+  incomingItems: IncomingItem[]
+  outgoingItems: OutgoingItem[]
   upcomingPickups: PickupSchedule[]
 }
 
@@ -56,8 +62,8 @@ const initialColdRooms: ColdRoom[] = [
       { item: 'Carrots', quantity: '500kg', source: 'Mary Wanjiku' }
     ],
     outgoingItems: [
-      { item: 'Potatoes', quantity: '300kg', source: 'Fresh Mart' },
-      { item: 'Carrots', quantity: '200kg', source: 'Green Grocers' }
+      { item: 'Potatoes', quantity: '300kg', client: 'Fresh Mart' },
+      { item: 'Carrots', quantity: '200kg', client: 'Green Grocers' }
     ],
     upcomingPickups: [
       { date: '2025-02-05', item: 'Potatoes', quantity: '500kg', client: 'Fresh Mart' },
@@ -84,8 +90,8 @@ const initialColdRooms: ColdRoom[] = [
       { item: 'Cabbage', quantity: '600kg', source: 'Sarah Akinyi' }
     ],
     outgoingItems: [
-      { item: 'Tomatoes', quantity: '400kg', source: 'Local Market' },
-      { item: 'Cabbage', quantity: '300kg', source: 'Super Fresh' }
+      { item: 'Tomatoes', quantity: '400kg', client: 'Local Market' },
+      { item: 'Cabbage', quantity: '300kg', client: 'Super Fresh' }
     ],
     upcomingPickups: [
       { date: '2025-02-05', item: 'Tomatoes', quantity: '400kg', client: 'Local Market' },
@@ -110,7 +116,7 @@ const initialColdRooms: ColdRoom[] = [
       { item: 'Peas', quantity: '400kg', source: 'David Kiprop' }
     ],
     outgoingItems: [
-      { item: 'Peas', quantity: '200kg', source: 'Fresh Foods' }
+      { item: 'Peas', quantity: '200kg', client: 'Fresh Foods' }
     ],
     upcomingPickups: [
       { date: '2025-02-08', item: 'Peas', quantity: '300kg', client: 'Fresh Foods' }
@@ -136,8 +142,8 @@ const initialColdRooms: ColdRoom[] = [
       { item: 'Shrimp', quantity: '200kg', source: 'Ocean Harvest' }
     ],
     outgoingItems: [
-      { item: 'Fish', quantity: '400kg', source: 'Seafood Market' },
-      { item: 'Shrimp', quantity: '150kg', source: 'Restaurant Supplies' }
+      { item: 'Fish', quantity: '400kg', client: 'Seafood Market' },
+      { item: 'Shrimp', quantity: '150kg', client: 'Restaurant Supplies' }
     ],
     upcomingPickups: [
       { date: '2025-02-05', item: 'Fish', quantity: '300kg', client: 'Seafood Market' },
@@ -164,8 +170,8 @@ const initialColdRooms: ColdRoom[] = [
       { item: 'Dairy', quantity: '500kg', source: 'Fresh Dairy' }
     ],
     outgoingItems: [
-      { item: 'Meat', quantity: '600kg', source: 'Butchery Plus' },
-      { item: 'Dairy', quantity: '300kg', source: 'Supermarket Chain' }
+      { item: 'Meat', quantity: '600kg', client: 'Butchery Plus' },
+      { item: 'Dairy', quantity: '300kg', client: 'Supermarket Chain' }
     ],
     upcomingPickups: [
       { date: '2025-02-07', item: 'Meat', quantity: '400kg', client: 'Butchery Plus' },
